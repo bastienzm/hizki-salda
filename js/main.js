@@ -2,13 +2,25 @@ import { StadiumInGrid } from './stadium-in-grid.js';
 import { Vector2d, Vector2dCssUnit } from './vector2d.js';
 import { convertCssUnit as cu } from './convertCssUnit.js';
 import { Segment2d } from './segment2d.js';
-const stg = new StadiumInGrid({
+const stgParameter = {
     start: new Vector2dCssUnit(10, 10, 'vmin', 'vmin'),
     blankSpace: { length: 8, unit: 'vmin' },
     quantity: new Vector2d(10, 10)
-});
+};
+const answer = (function (arr) {
+    const ret = [];
+    for (const seg of arr) {
+        ret.push(new Segment2d({
+            start: new Vector2d(seg[0], seg[1]),
+            end: new Vector2d(seg[2], seg[3])
+        }));
+    }
+    return ret;
+})([[3, 0, 9, 0], [1, 1, 5, 1], [0, 3, 8, 3], [3, 4, 8, 4], [0, 5, 5, 5], [3, 8, 8, 8]]);
+let stg = new StadiumInGrid(stgParameter);
 const mousePosition = new Segment2d({ start: new Vector2d(0, 0), end: new Vector2d(0, 0) });
 let mouseIsDown = false;
+stg.span.style.display = 'none';
 document.body.appendChild(stg.span);
 window.addEventListener('resize', function () {
     stg.segment = mousePosition;
@@ -38,12 +50,26 @@ document.addEventListener('mousedown', function (evt) {
     mousePosition.end = mousePosition.start.copy();
     stg.segment = mousePosition;
     mouseIsDown = true;
+    stg.span.style.display = '';
 });
 document.addEventListener('mouseup', function (evt) {
     if ((evt.buttons & 1) === 1) {
         return;
     }
     stg.segment = mousePosition;
+    let found = false;
+    for (const seg of answer) {
+        if (seg.equals(mousePosition)) {
+            stg.span.style.borderColor = 'darkGreen';
+            stg = new StadiumInGrid(stgParameter);
+            found = true;
+            break;
+        }
+    }
+    stg.span.style.display = 'none';
+    if (found) {
+        document.body.appendChild(stg.span);
+    }
     mouseIsDown = false;
 });
 function convert(rawEnd, stg) {

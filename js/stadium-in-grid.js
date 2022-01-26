@@ -12,15 +12,16 @@ export class StadiumInGrid {
             start: new Vector2d(0, 0),
             end: new Vector2d(0, 0)
         });
-        const style = document.createElement('style');
-        style.textContent = `
-      span {
-        position: absolute;
-        display: none;
-        border: 2px solid black;
-      }
-    `;
-        document.head.appendChild(style);
+        if (document.querySelectorAll('style').length === 0) {
+            const style = document.createElement('style');
+            style.textContent = `
+        span {
+          position: absolute;
+          border: 2px solid black;
+        }
+      `;
+            document.head.appendChild(style);
+        }
         this.grid = new Grid2dCssUnit(g2dcu);
     }
     /** @returns The position of itself on the grid */

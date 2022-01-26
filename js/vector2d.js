@@ -31,6 +31,9 @@ export class Vector2d {
         this.y += v.y;
         return true;
     }
+    equals(v) {
+        return this.x === v.x && this.y === v.y;
+    }
 }
 /** Meant for iterating over the keys of a Vector2d. */
 Vector2d.axes = ['x', 'y'];
@@ -56,5 +59,8 @@ export class Vector2dCssUnit extends Vector2d {
             return false;
         }
         return super.add(v);
+    }
+    equals(v) {
+        return super.equals(v) && this.units.x === v.units.x && this.units.y === v.units.y;
     }
 }

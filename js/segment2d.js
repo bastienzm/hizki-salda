@@ -11,6 +11,9 @@ export class Segment2d {
     get vector() {
         return new Vector2d(this.end.x - this.start.x, this.end.y - this.start.y);
     }
+    get length() {
+        return this.vector.length;
+    }
     copy() {
         return new Segment2d(this);
     }
@@ -28,6 +31,7 @@ export class Segment2d {
                 if (this[end][axis] < 0) {
                     const otherAxis = axis === Vector2d.axes[0] ? Vector2d.axes[1] : Vector2d.axes[0];
                     // we modify freeVector first
+                    // @ts-ignore
                     freeVector[otherAxis] += Math.sign(freeVector[otherAxis]) * this[end][axis];
                     freeVector[axis] -= this[end][axis];
                     // Cutting in axis is simple
@@ -99,10 +103,8 @@ export class Segment2d {
         this.end = new Vector2d(this.start.x + length * Math.cos(angle), this.start.y + length * Math.sin(angle));
         this.roundEnd();
     }
-    get length() {
-        const x = this.end.x - this.start.x;
-        const y = this.end.y - this.start.y;
-        return Math.sqrt(x * x + y * y);
+    equals(s) {
+        return s.start.equals(this.start) && s.end.equals(this.end);
     }
 }
 /** Meant for iterating over the keys of a Segment. */
@@ -118,5 +120,8 @@ export class Segment2dCssUnit extends Segment2d {
     /** Vector from the start of the segment to the end */
     get vector() {
         return new Vector2dCssUnit(this.end.x - this.start.x, this.end.y - this.start.y, this.units.x, this.units.y);
+    }
+    equals(s) {
+        return super.equals(s) && this.units.x === s.units.x && s.units.y === this.units.y;
     }
 }
