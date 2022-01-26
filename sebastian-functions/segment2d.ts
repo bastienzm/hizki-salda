@@ -23,6 +23,11 @@ export class Segment2d {
     this.end = s2d.end.copy();
   }
 
+  /** A copy of this segment, but starting in the end, and ending in the start. */
+  get reversed() {
+    return new Segment2d({start: this.end.copy(), end: this.start.copy()})
+  }
+
   /** Vector from the start of the segment to the end */
   get vector(): Vector2d {
     return new Vector2d(this.end.x - this.start.x, this.end.y - this.start.y);
@@ -58,7 +63,6 @@ export class Segment2d {
           const otherAxis: keyof Vector2d = axis === Vector2d.axes[0] ? Vector2d.axes[1] : Vector2d.axes[0];
 
           // we modify freeVector first
-          // @ts-ignore
           freeVector[otherAxis] += Math.sign(freeVector[otherAxis]) * this[end][axis];
           freeVector[axis] -= this[end][axis];
 

@@ -2,6 +2,7 @@ import { StadiumInGrid } from './stadium-in-grid.js';
 import { Vector2d, Vector2dCssUnit } from './vector2d.js';
 import { convertCssUnit as cu } from './convertCssUnit.js';
 import { Segment2d } from './segment2d.js';
+const oldStgs = [];
 const stgParameter = {
     start: new Vector2dCssUnit(10, 10, 'vmin', 'vmin'),
     blankSpace: { length: 8, unit: 'vmin' },
@@ -17,13 +18,19 @@ const answer = (function (arr) {
     }
     return ret;
 })([[3, 0, 9, 0], [1, 1, 5, 1], [0, 3, 8, 3], [3, 4, 8, 4], [0, 5, 5, 5], [3, 8, 8, 8]]);
+const answered = new Set();
 let stg = new StadiumInGrid(stgParameter);
 const mousePosition = new Segment2d({ start: new Vector2d(0, 0), end: new Vector2d(0, 0) });
 let mouseIsDown = false;
 stg.span.style.display = 'none';
 document.body.appendChild(stg.span);
 window.addEventListener('resize', function () {
-    stg.segment = mousePosition;
+    for (const oldStg of oldStgs) {
+        oldStg.updateSegment();
+        oldStg.span.style.borderColor = 'darkGreen';
+    }
+    stg.updateSegment();
+    stg.span.style.display = 'none';
 });
 document.addEventListener('mousemove', function (evt) {
     const horizontal = window.innerWidth > window.innerHeight;
@@ -58,18 +65,32 @@ document.addEventListener('mouseup', function (evt) {
     }
     stg.segment = mousePosition;
     let found = false;
-    for (const seg of answer) {
-        if (seg.equals(mousePosition)) {
-            stg.span.style.borderColor = 'darkGreen';
-            stg = new StadiumInGrid(stgParameter);
-            found = true;
-            break;
+    for (const [index, seg] of answer.entries()) {
+        if (!answered.has(index)) {
+            let reversed = false;
+            if (stg.segment.equals(seg.reversed)) {
+                // Correct answer
+                reversed = true;
+                stg.segment = stg.segment.reversed;
+            }
+            if (reversed || seg.equals(stg.segment)) {
+                // Correct answer
+                found = true;
+                answered.add(index);
+                stg.span.style.borderColor = 'darkGreen';
+                oldStgs.push(stg);
+                stg = new StadiumInGrid(stgParameter);
+                if (answered.size === answer.length) {
+                    alert('Congrats!');
+                }
+                else {
+                    document.body.appendChild(stg.span);
+                }
+                break;
+            }
         }
     }
     stg.span.style.display = 'none';
-    if (found) {
-        document.body.appendChild(stg.span);
-    }
     mouseIsDown = false;
 });
 function convert(rawEnd, stg) {
