@@ -65,7 +65,7 @@ export class StadiumInGrid {
 
   set grid(grid: Grid2dCssUnit) {
     this.innerGrid = grid.copy();
-    this.innerRadius = 0.5 * this.innerGrid.blankSpace.length;
+    this.innerRadius = 0.45 * this.innerGrid.blankSpace.length;
     if (this.segment) {
       this.innerSegment.bindAboveByVector(this.innerGrid.quantity);
     }
@@ -86,64 +86,56 @@ export class StadiumInGrid {
     if (this.x > 40) {
       this.x = 0;
     }
-    document.querySelector('style').textContent = `
-      span {
-        display: ${this.innerGrid && this.innerRadius ? 'block' : 'none'};
-        border: 2px solid black;
-        position: absolute;
-        ${this.innerGrid && this.innerRadius
-          ?
-            `
-              transform-origin: ${
-                this.innerRadius + this.innerGrid.blankSpace.unit
-                + ' '
-                + this.innerRadius + this.innerGrid.blankSpace.unit
-              };
-              border-radius: ${
-                this.innerRadius + this.innerGrid.blankSpace.unit
-              };
-              height: ${
-                2 * this.innerRadius + this.innerGrid.blankSpace.unit
-              };
-              ${this.innerSegment
-                ?
-                  `
-                    left: calc(${window.innerWidth > window.innerHeight
-                            ? (window.innerWidth - window.innerHeight) / 2
-                            : 0}px
-                          + ${this.innerGrid.start.x + this.innerGrid.start.units.x}
-                          + ${(this.innerGrid.blankSpace.length * this.innerSegment.start.x)
-                             + this.innerGrid.blankSpace.unit});
+    this.span.style.cssText = `
+      display: ${this.innerGrid && this.innerRadius ? 'block' : 'none'};
+      border: 2px solid black;
+      position: absolute;
+      ${this.innerGrid && this.innerRadius
+        ?
+          `
+            transform-origin: ${
+              this.innerRadius + this.innerGrid.blankSpace.unit
+              + ' '
+              + this.innerRadius + this.innerGrid.blankSpace.unit
+            };
+            border-radius: ${
+              this.innerRadius + this.innerGrid.blankSpace.unit
+            };
+            height: ${
+              2 * this.innerRadius + this.innerGrid.blankSpace.unit
+            };
+            ${this.innerSegment
+              ?
+                `
+                  left: calc(
+                    50vw - 50vmin
+                      + ${this.innerGrid.start.x + this.innerGrid.start.units.x}
+                      + ${(this.innerGrid.blankSpace.length * this.innerSegment.start.x)
+                        + this.innerGrid.blankSpace.unit});
 
-                    top: calc(${window.innerHeight > window.innerWidth
-                           ? (window.innerHeight - window.innerWidth) / 2
-                           : 0}px
-                         + ${this.innerGrid.start.y + this.innerGrid.start.units.y}
-                         + ${(this.innerGrid.blankSpace.length * this.innerSegment.start.y)
-                            + this.innerGrid.blankSpace.unit});
+                  top: calc(
+                    50vh - 50vmin
+                    + ${this.innerGrid.start.y + this.innerGrid.start.units.y}
+                    + ${(this.innerGrid.blankSpace.length * this.innerSegment.start.y)
+                      + this.innerGrid.blankSpace.unit}
+                  );
 
-                    width: ${this.innerSegment.length * this.innerGrid.blankSpace.length + 2 * this.innerRadius
-                            + this.innerGrid.blankSpace.unit};
-
-                    ${this.innerSegment.start != this.innerSegment.end
-                      ?
-                        `
-                          transform: translate(
-                            calc(-${this.innerRadius}${this.innerGrid.blankSpace.unit} + 2px),
-                            calc(-${this.innerRadius}${this.innerGrid.blankSpace.unit} + 2px)
-                          ) rotate(${Math.atan2(this.innerSegment.vector.y, this.innerSegment.vector.x)}rad);
-                        `
-                      :
-                        ''
-                    }
-                  `
-                :
-                  ''
-              }
-            `
-          :
-            ''
-        }
+                  width: ${
+                    this.innerSegment.length * this.innerGrid.blankSpace.length + 2 * this.innerRadius
+                      + this.innerGrid.blankSpace.unit
+                  };
+                  transform: translate(
+                    -${this.innerRadius}${this.innerGrid.blankSpace.unit},
+                    -${this.innerRadius}${this.innerGrid.blankSpace.unit}
+                  ) rotate(${Math.atan2(this.innerSegment.vector.y, this.innerSegment.vector.x)}rad);
+                  
+                `
+              :
+                ''
+            }
+          `
+        :
+          ''
       }
     `;
   }

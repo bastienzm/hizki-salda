@@ -4,6 +4,9 @@ import {convertCssUnit as cu} from './convertCssUnit.js';
 import {Segment2d} from './segment2d.js';
 import {CssDistanceUnit} from './css-distance-unit.js';
 
+
+const answered: Set<number> = new Set();
+
 const stgParameter: {
   start: Vector2dCssUnit;
   blankSpace: {length: number; unit: CssDistanceUnit};
@@ -34,14 +37,10 @@ let mouseIsDown = false;
 stg.span.style.display = 'none';
 document.body.appendChild(stg.span);
 
-window.addEventListener('resize', function() {
-  stg.segment = mousePosition;
-})
-
 document.addEventListener('mousemove', function (evt) {
-  const horizontal: boolean = window.innerWidth > window.innerHeight;
 
   if (mouseIsDown) {
+    const horizontal: boolean = window.innerWidth > window.innerHeight;
     mousePosition.end = new Vector2d(
       evt.clientX - (horizontal ? (window.innerWidth - window.innerHeight) / 2 : 0),
       evt.clientY - (horizontal ? 0 : (window.innerHeight - window.innerWidth) / 2)
@@ -87,19 +86,26 @@ document.addEventListener('mouseup', function(evt) {
     return;
   }
   stg.segment = mousePosition;
-  let found: boolean = false;
-  for (const seg of answer) {
-    if (seg.equals(mousePosition)) {
-      stg.span.style.borderColor = 'darkGreen';
-      stg = new StadiumInGrid(stgParameter);
-      found = true;
-      break;
+  for (const [index, seg] of answer.entries()) {
+    if (!answered.has(index)) {
+      if (seg.equals(stg.segment.reversed)) {
+        stg.segment = stg.segment.reversed;
+      }
+      if (seg.equals(stg.segment)) {
+        answered.add(index);
+        stg.span.style.borderColor = 'darkGreen';
+        stg = new StadiumInGrid(stgParameter);
+        if (answered.size === answer.length) {
+          alert('congrats!')
+        } else {
+          stg.span.style.display = 'none';
+          document.body.appendChild(stg.span);
+        }
+        break;
+      }
     }
   }
   stg.span.style.display = 'none';
-  if (found) {
-    document.body.appendChild(stg.span);
-  }
   mouseIsDown = false;
 })
 

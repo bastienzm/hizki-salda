@@ -2,6 +2,7 @@ import { StadiumInGrid } from './stadium-in-grid.js';
 import { Vector2d, Vector2dCssUnit } from './vector2d.js';
 import { convertCssUnit as cu } from './convertCssUnit.js';
 import { Segment2d } from './segment2d.js';
+const answered = new Set();
 const stgParameter = {
     start: new Vector2dCssUnit(10, 10, 'vmin', 'vmin'),
     blankSpace: { length: 8, unit: 'vmin' },
@@ -22,12 +23,9 @@ const mousePosition = new Segment2d({ start: new Vector2d(0, 0), end: new Vector
 let mouseIsDown = false;
 stg.span.style.display = 'none';
 document.body.appendChild(stg.span);
-window.addEventListener('resize', function () {
-    stg.segment = mousePosition;
-});
 document.addEventListener('mousemove', function (evt) {
-    const horizontal = window.innerWidth > window.innerHeight;
     if (mouseIsDown) {
+        const horizontal = window.innerWidth > window.innerHeight;
         mousePosition.end = new Vector2d(evt.clientX - (horizontal ? (window.innerWidth - window.innerHeight) / 2 : 0), evt.clientY - (horizontal ? 0 : (window.innerHeight - window.innerWidth) / 2));
         convert(mousePosition.end, stg);
         stg.segment = mousePosition;
@@ -57,19 +55,27 @@ document.addEventListener('mouseup', function (evt) {
         return;
     }
     stg.segment = mousePosition;
-    let found = false;
-    for (const seg of answer) {
-        if (seg.equals(mousePosition)) {
-            stg.span.style.borderColor = 'darkGreen';
-            stg = new StadiumInGrid(stgParameter);
-            found = true;
-            break;
+    for (const [index, seg] of answer.entries()) {
+        if (!answered.has(index)) {
+            if (seg.equals(stg.segment.reversed)) {
+                stg.segment = stg.segment.reversed;
+            }
+            if (seg.equals(stg.segment)) {
+                answered.add(index);
+                stg.span.style.borderColor = 'darkGreen';
+                stg = new StadiumInGrid(stgParameter);
+                if (answered.size === answer.length) {
+                    alert('congrats!');
+                }
+                else {
+                    stg.span.style.display = 'none';
+                    document.body.appendChild(stg.span);
+                }
+                break;
+            }
         }
     }
     stg.span.style.display = 'none';
-    if (found) {
-        document.body.appendChild(stg.span);
-    }
     mouseIsDown = false;
 });
 function convert(rawEnd, stg) {

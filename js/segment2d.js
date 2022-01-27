@@ -7,6 +7,10 @@ export class Segment2d {
         this.start = s2d.start.copy();
         this.end = s2d.end.copy();
     }
+    /** a copy of itself, but with start and end reversed. */
+    get reversed() {
+        return new Segment2d({ start: this.end.copy(), end: this.start.copy() });
+    }
     /** Vector from the start of the segment to the end */
     get vector() {
         return new Vector2d(this.end.x - this.start.x, this.end.y - this.start.y);
@@ -16,6 +20,12 @@ export class Segment2d {
     }
     copy() {
         return new Segment2d(this);
+    }
+    /** reverse start and end */
+    reverse() {
+        const temp = this.start;
+        this.start = this.end;
+        this.end = temp;
     }
     /**
      * Cuts whatever exceeds below zero (0) from itself, in both dimensions.
@@ -31,7 +41,6 @@ export class Segment2d {
                 if (this[end][axis] < 0) {
                     const otherAxis = axis === Vector2d.axes[0] ? Vector2d.axes[1] : Vector2d.axes[0];
                     // we modify freeVector first
-                    // @ts-ignore
                     freeVector[otherAxis] += Math.sign(freeVector[otherAxis]) * this[end][axis];
                     freeVector[axis] -= this[end][axis];
                     // Cutting in axis is simple
