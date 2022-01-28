@@ -59,8 +59,6 @@ export class StadiumInGrid {
         }
         this.span.style.cssText = `
       display: ${this.innerGrid && this.innerRadius ? 'block' : 'none'};
-      border: 2px solid black;
-      position: absolute;
       ${this.innerGrid && this.innerRadius
             ?
                 `

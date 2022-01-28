@@ -9,3 +9,8 @@ img {
     position: absolute;
     pointer-events: none;
 }
+
+span {
+    border: max(4px, 1vh) solid black;
+    position: absolute;
+}

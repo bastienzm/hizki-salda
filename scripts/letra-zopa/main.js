@@ -2,7 +2,6 @@ import { StadiumInGrid } from './stadium-in-grid.js';
 import { Vector2d, Vector2dCssUnit } from './vector2d.js';
 import { convertCssUnit as cu } from './convertCssUnit.js';
 import { Segment2d } from './segment2d.js';
-const img = document.querySelector('img');
 const answered = new Set();
 const stgParameter = {
     start: new Vector2dCssUnit(10, 10, 'vmin', 'vmin'),
@@ -24,20 +23,21 @@ const mousePosition = new Segment2d({ start: new Vector2d(0, 0), end: new Vector
 let mouseIsDown = false;
 let horizontal = window.innerWidth > window.innerHeight;
 let extraSpace = Math.abs(window.innerWidth - window.innerHeight);
+window.top.postMessage(`${answer.length - answered.size}`, '*');
 stg.span.style.display = 'none';
 document.body.appendChild(stg.span);
 window.addEventListener('resize', function () {
     horizontal = window.innerWidth > window.innerHeight;
     extraSpace = Math.abs(window.innerWidth - window.innerHeight);
 });
-document.addEventListener('mousemove', function (evt) {
+document.addEventListener('pointermove', function (evt) {
     if (mouseIsDown) {
         mousePosition.end = new Vector2d(evt.clientX - (horizontal ? extraSpace / 2 : 0), evt.clientY - (horizontal ? 0 : extraSpace / 2));
         convert(mousePosition.end, stg);
         stg.segment = mousePosition;
     }
 });
-document.addEventListener('mousedown', function (evt) {
+document.addEventListener('pointerdown', function (evt) {
     // If it might be unintentional, return.
     if (evt.metaKey || evt.ctrlKey || evt.altKey || evt.shiftKey || (evt.buttons & 1) !== 1) {
         return;
@@ -55,7 +55,7 @@ document.addEventListener('mousedown', function (evt) {
     mouseIsDown = true;
     stg.span.style.display = '';
 });
-document.addEventListener('mouseup', function (evt) {
+document.addEventListener('pointerup', function (evt) {
     if ((evt.buttons & 1) === 1) {
         return;
     }
@@ -69,10 +69,8 @@ document.addEventListener('mouseup', function (evt) {
                 answered.add(index);
                 stg.span.style.borderColor = 'darkGreen';
                 stg = new StadiumInGrid(stgParameter);
-                if (answered.size === answer.length) {
-                    window.top.postMessage(`${answered.size}`, '*');
-                }
-                else {
+                window.top.postMessage(`${answer.length - answered.size}`, '*');
+                if (answered.size !== answer.length) {
                     stg.span.style.display = 'none';
                     document.body.appendChild(stg.span);
                 }
