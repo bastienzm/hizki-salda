@@ -1,6 +1,7 @@
 iframe {
     border: 0 solid black;
     width: 100%;
-    height: calc(100% - 56px);
+    height: calc(100% - 56px - 1em);
     bottom: 0;
+    touch-action: none;
 }
