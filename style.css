@@ -1,11 +1,5 @@
-img {
-    width: 100vmin;
-    height: 100vmin;
-    left: calc(50vw - 50vmin);
-    top: calc(50vh - 50vmin);
-    -webkit-touch-callout: none;
-    -webkit-user-select: none;
-    user-select: none;
-    position: absolute;
-    pointer-events: none;
+iframe {
+    border: 0 solid black;
+    width: 100%;
+    height: calc(100% - 56px);
 }

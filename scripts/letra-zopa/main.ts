@@ -35,13 +35,13 @@ const answer: Segment2d[] = (
 let stg: StadiumInGrid = new StadiumInGrid(stgParameter);
 const mousePosition: Segment2d = new Segment2d({start: new Vector2d(0, 0), end: new Vector2d(0, 0)});
 let mouseIsDown = false;
-let horizontal: boolean = cu(window.getComputedStyle(img).width, null) > window.innerHeight;
+let horizontal: boolean = window.innerWidth > window.innerHeight;
 let extraSpace: number = Math.abs(window.innerWidth - window.innerHeight);
 
 stg.span.style.display = 'none';
 document.body.appendChild(stg.span);
 
-document.addEventListener('resize', function() {
+window.addEventListener('resize', function() {
   horizontal = window.innerWidth > window.innerHeight;
   extraSpace = Math.abs(window.innerWidth - window.innerHeight);
 });
