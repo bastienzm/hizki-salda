@@ -2,5 +2,5 @@ iframe {
     border: 0 solid black;
     width: 100%;
     height: calc(100% - 56px);
-    min-height: 400px;
+    bottom: 0;
 }

@@ -31,6 +31,7 @@ window.addEventListener('resize', function () {
     extraSpace = Math.abs(window.innerWidth - window.innerHeight);
 });
 document.addEventListener('pointermove', function (evt) {
+    evt.preventDefault();
     if (mouseIsDown) {
         mousePosition.end = new Vector2d(evt.clientX - (horizontal ? extraSpace / 2 : 0), evt.clientY - (horizontal ? 0 : extraSpace / 2));
         convert(mousePosition.end, stg);
@@ -38,6 +39,7 @@ document.addEventListener('pointermove', function (evt) {
     }
 });
 document.addEventListener('pointerdown', function (evt) {
+    evt.preventDefault();
     // If it might be unintentional, return.
     if (evt.metaKey || evt.ctrlKey || evt.altKey || evt.shiftKey || (evt.buttons & 1) !== 1) {
         return;
@@ -56,6 +58,7 @@ document.addEventListener('pointerdown', function (evt) {
     stg.span.style.display = '';
 });
 document.addEventListener('pointerup', function (evt) {
+    evt.preventDefault();
     if ((evt.buttons & 1) === 1) {
         return;
     }
