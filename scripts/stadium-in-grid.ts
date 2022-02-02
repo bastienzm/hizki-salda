@@ -19,7 +19,7 @@ export class StadiumInGrid {
   /** The position of itself on the grid */
   private innerSegment: Segment2d;
 
-  private x: number;
+  private correct: boolean;
 
 
   constructor(g2dcu?: {
@@ -27,7 +27,7 @@ export class StadiumInGrid {
     blankSpace: {length: number; unit: CssDistanceUnit};
     quantity: Vector2d;
   }) {
-    this.x = 0;
+    this.correct = false;
     this.span = document.createElement('span');
     this.innerSegment = new Segment2d({
       start: new Vector2d(0, 0),
@@ -81,13 +81,15 @@ export class StadiumInGrid {
     this.updateAll();
   }
 
+  setCorrect() {
+    this.correct = true;
+    this.updateStyle();
+  }
+
   private updateStyle(): void {
-    this.x += 1;
-    if (this.x > 40) {
-      this.x = 0;
-    }
     this.span.style.cssText = `
-      display: ${this.innerGrid && this.innerRadius ? 'block' : 'none'};
+      display: ${this.innerGrid && this.innerRadius || this.correct ? 'block' : 'none'};
+      ${this.correct ? 'border-color: darkgreen;' : '' }
       ${this.innerGrid && this.innerRadius
         ?
           `
@@ -106,16 +108,14 @@ export class StadiumInGrid {
               ?
                 `
                   left: calc(
-                    50vw - 50vmin
-                      + ${this.innerGrid.start.x + this.innerGrid.start.units.x}
+                    ${this.innerGrid.start.x + this.innerGrid.start.units.x}
                       + ${(this.innerGrid.blankSpace.length * this.innerSegment.start.x)
                         + this.innerGrid.blankSpace.unit});
 
                   top: calc(
-                    50vh - 50vmin
-                    + ${this.innerGrid.start.y + this.innerGrid.start.units.y}
-                    + ${(this.innerGrid.blankSpace.length * this.innerSegment.start.y)
-                      + this.innerGrid.blankSpace.unit}
+                    ${this.innerGrid.start.y + this.innerGrid.start.units.y}
+                      + ${(this.innerGrid.blankSpace.length * this.innerSegment.start.y)
+                        + this.innerGrid.blankSpace.unit}
                   );
 
                   width: ${

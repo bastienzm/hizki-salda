@@ -1,7 +1,53 @@
-iframe {
-    border: 0 solid black;
+body {
+    height: 100vh;
+    padding: 0;
+    margin: 0;
+}
+
+div#main {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     width: 100%;
-    height: calc(100% - 56px - 1em);
+    position: absolute;
+    right: 0;
+    top: 44px;
+    bottom: 44px;
+    margin: 0;
+    background-image: linear-gradient(to bottom, aliceblue, lightblue);
+}
+
+.wrapper {
+    position: relative;
+    width: 100%;
+    max-width: min(100vw, calc(100vh - 121px));
+}
+
+.one-by-one.aspect-ratio {
+    padding-bottom: 100%;
+
+}
+
+.wrapper > img {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
     bottom: 0;
+    left: 0;
+    right: 0;
+}
+
+img, span {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    user-select: none;
+    pointer-events: none;
     touch-action: none;
+}
+
+span {
+    position: absolute;
+    border: 5px solid black;
+    z-index: 99;
 }

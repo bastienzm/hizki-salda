@@ -15,16 +15,19 @@
             <ion-title>Letra zopa</ion-title>
         </ion-toolbar>
     </ion-header>
-
-    <ion-content class="ion-padding">
         <ion-item>
             Falta zaizkizu
             <ion-badge slot="end" color="warning">kalkulatzen...</ion-badge>
         </ion-item>
-        <iframe src="letra-zopa/index.html"></iframe>
-    </ion-content>
+
+        <div id="main">
+            <div class="wrapper">
+                <div class="one-by-one aspect-ratio"></div>
+                <img alt="This game needs this image to work. I am sorry." src="images/fondo.png"/>
+            </div>
+        </div>
 </ion-app>
 
-<script src="scripts/main.js"></script>
+<script type="module" src="scripts/main.js"></script>
 </body>
 </html>
